@@ -1,0 +1,14 @@
+#How to Run This Script
+
+#Ensure you have Python 3 installed.
+
+#Install required package:
+    pip install opencv-python numpy
+
+#Download yolov3.cfg, yolov3.weights, and coco.names in script folder.
+
+#Replace "input_video.mp4" in the script with your video filename.
+
+#Run the script:
+    python video_crop_yolo.py
+    Check output video cropped_output.mp4.
