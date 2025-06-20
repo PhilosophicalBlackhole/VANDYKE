@@ -1,0 +1,96 @@
+import React, { useState } from "react";
+
+export default function VideoEditor() {
+  const [originalVideoFile, setOriginalVideoFile] = useState(null); // File object
+  const [originalVideoUrl, setOriginalVideoUrl] = useState(null);   // Local preview URL
+  const [processedVideoUrl, setProcessedVideoUrl] = useState(null); // Processed video URL
+  const [loading, setLoading] = useState(false);
+
+  // When user selects a video file
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setOriginalVideoFile(file);
+      setOriginalVideoUrl(URL.createObjectURL(file));
+      setProcessedVideoUrl(null); // Clear previous processed video
+    }
+  };
+
+  // Call backend API to process video
+  const handleProcessVideo = async () => {
+    if (!originalVideoFile) return;
+
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("video", originalVideoFile);
+
+      const response = await fetch("/api/process-video", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Processing failed");
+      }
+
+      const blob = await response.blob();
+      const videoUrl = URL.createObjectURL(blob);
+      setProcessedVideoUrl(videoUrl);
+    } catch (error) {
+      alert("Video processing error: " + error.message);
+    }
+
+    setLoading(false);
+  };
+
+  return (
+    <div className="p-4 max-w-3xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">React Video Crop & Stabilize</h1>
+
+      <input type="file" accept="video/*" onChange={handleFileChange} />
+
+      {originalVideoUrl && (
+        <div className="mt-4">
+          <h2>Original Video</h2>
+          <video
+            src={originalVideoUrl}
+            controls
+            width="480"
+            className="border rounded"
+          />
+        </div>
+      )}
+
+      <button
+        onClick={handleProcessVideo}
+        disabled={!originalVideoFile || loading}
+        className={`mt-4 px-4 py-2 rounded text-white ${
+          loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+        }`}
+      >
+        {loading ? "Processing..." : "Process Video"}
+      </button>
+
+      {processedVideoUrl && (
+        <div className="mt-6">
+          <h2>Processed Video</h2>
+          <video
+            src={processedVideoUrl}
+            controls
+            width="480"
+            className="border rounded"
+          />
+          <a
+            href={processedVideoUrl}
+            download="processed-video.mp4"
+            className="block mt-2 text-blue-600 underline"
+          >
+            Download Processed Video
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
