@@ -1,0 +1,28 @@
+
+#Step-by-Step Explanation
+Setup YOLOv3
+Load the configuration, weights, and COCO class names (you need the files: yolov3.cfg, yolov3.weights, and coco.names).
+
+Load the video
+Use OpenCV’s VideoCapture to open your source video.
+
+Prepare to write output video
+We decide an output frame size (400x400 here) for cropped frames and prepare the output writer.
+
+Processing frames
+For each frame:
+
+Create a blob to normalize and resize the frame for YOLO input.
+Run the forward pass through YOLO to get detections.
+Filter detections by confidence and use Non-Maximum Suppression to remove overlaps.
+Select bounding box
+We pick the largest detected bounding box for cropping (adjust logic to your interest).
+
+Crop and resize
+Crop detected bounding box area from frame, resize it to the output size, and write it as a frame to output video.
+
+Fallbacks
+If no detection happens or if crop is invalid, write a black frame (you can customize behavior).
+
+Release resources
+Save output file and clean up.
