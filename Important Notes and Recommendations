@@ -1,0 +1,16 @@
+Important Notes & Recommendations
+Get YOLO files beforehand: You can download the required files from:
+
+yolov3.weights: https://pjreddie.com/media/files/yolov3.weights
+yolov3.cfg: https://github.com/pjreddie/darknet/blob/master/cfg/yolov3.cfg?raw=true
+coco.names: https://github.com/pjreddie/darknet/blob/master/data/coco.names?raw=true
+
+Targeting specific classes:
+If you want to focus on a particular class (e.g., window), note YOLOv3 COCO dataset doesn't have a "window" class, mostly objects like "person", "car", etc. For custom targets, consider training a model or using a different one that detects your target object.
+
+Performance:
+YOLOv3 is fast but can be slow on large videos without GPU. For better performance, consider smaller models like YOLOv3-tiny or mobile-optimized models.
+
+Improving crop logic:
+You can refine bounding box selection based on class or apply smoothing for less jittery cropping.
+
